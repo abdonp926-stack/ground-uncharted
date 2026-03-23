@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Daily Readings / Prayers">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#191a1a">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23191a1a'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='%23d97757'>✝</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Daily Readings / Prayers</title>
+  <style>
+    :root {
+      --accent: #d97757;
+      --accent-dim: #b8614a;
+      --accent-glow: rgba(217, 119, 87, 0.12);
+      --bg: #191a1a;
+      --bg-card: #1f2121;
+      --bg-header: #141515;
+      --bg-nav: #1b1c1c;
+      --bg-instruction: #232525;
+      --text: #e8e4de;
+      --text-secondary: #a8a29e;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.14);
+      --shadow: rgba(0, 0, 0, 0.25);
+    }
+
+    html { font-size: 112%; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    ::selection {
+      background: rgba(217, 119, 87, 0.35);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    header {
+      background: var(--bg-header);
+      color: var(--text);
+      text-align: center;
+      padding: 2.5rem 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    header p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .liturgical-day {
+      color: var(--accent) !important;
+      font-weight: 500 !important;
+      font-size: 0.78rem !important;
+      letter-spacing: 0.03em !important;
+      margin-bottom: 0.2rem;
+    }
+
+    .cross {
+      font-size: 1.3rem;
+      display: block;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+      opacity: 0.8;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1rem;
+      background: var(--bg-nav);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.4rem 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    nav a:hover, nav a:active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 1.25rem 1.25rem 5rem;
+    }
+
+    .prayer-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      margin: 1rem 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s ease;
+    }
+
+    .prayer-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .prayer-header {
+      cursor: pointer;
+      padding: 1.35rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 3px solid var(--accent-dim);
+      transition: background 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .prayer-header:hover {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .prayer-header h2 {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+      padding-right: 1rem;
+    }
+
+    .prayer-header .subtitle {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .chevron {
+      font-size: 1rem;
+      color: var(--accent);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .prayer-card.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .prayer-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .prayer-card.open .prayer-body {
+      max-height: 5000px;
+    }
+
+    .prayer-content {
+      padding: 0.25rem 1.5rem 1.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .prayer-content p {
+      margin-top: 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .prayer-content .prayer-text {
+      color: rgba(232, 228, 222, 0.85);
+    }
+
+    .prayer-content .instruction {
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 400;
+      background: var(--bg-instruction);
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      margin-top: 1.1rem;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+    }
+
+    .prayer-content h3 {
+      font-size: 0.7rem;
+      color: var(--accent);
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+    }
+
+    .prayer-content .step {
+      margin-top: 1.1rem;
+      padding-left: 0;
+    }
+
+    .prayer-content .step-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.35rem;
+      opacity: 0.85;
+    }
+
+    .glory-be {
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      font-weight: 300;
+    }
+
+    .repeat-note {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-top: 0.85rem;
+      letter-spacing: 0.02em;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.72rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      header { padding: 2rem 1rem 1.5rem; }
+      header h1 { font-size: 1rem; }
+      nav a { font-size: 0.68rem; padding: 0.35rem 0.75rem; }
+      .prayer-header { padding: 1.1rem 1.15rem; }
+      .prayer-header h2 { font-size: 0.85rem; }
+      .prayer-content { padding: 0.25rem 1.15rem 1.5rem; }
+      .prayer-content p { font-size: 0.9rem; }
+      main { padding: 0.75rem 0.75rem 3rem; }
+    }
+
+    /* Expand/collapse all button */
+    .toggle-all {
+      display: block;
+      margin: 0.75rem auto;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.4rem 1.1rem;
+      border-radius: 100px;
+      cursor: pointer;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: all 0.2s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .toggle-all:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Daily Resources Section */
+    .daily-resources {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .resource-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.45rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .resource-card:hover, .resource-card:active {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--accent-dim);
+      transform: translateY(-1px);
+    }
+
+    .resource-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      margin-bottom: 0.15rem;
+    }
+
+    .resource-card h3 {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .resource-card .resource-detail {
+      font-size: 0.65rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .resource-card .resource-sub {
+      font-size: 0.62rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    @media (max-width: 480px) {
+      .daily-resources { gap: 0.5rem; }
+      .resource-card { padding: 1rem 0.75rem; }
+      .resource-card h3 { font-size: 0.74rem; }
+    }
+
+    /* Saint of the Day */
+    .saint-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .saint-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .saint-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .saint-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.15rem;
+    }
+
+    .saint-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .saint-details {
+      margin-top: 0.85rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .saint-patron {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .saint-fact {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 480px) {
+      .saint-card { padding: 1rem 1.15rem; }
+      .saint-name { font-size: 0.92rem; }
+    }
+
+    /* Section Dividers */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0 1rem;
+      padding: 0 0.25rem;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-divider h2 {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="cross">✝&#xFE0E;</span>
+  <h1>Daily Readings / Prayers</h1>
+  <p id="liturgical-day-label" class="liturgical-day"></p>
+  <p>In nomine Patris, et Filii, et Spiritus Sancti</p>
+</header>
+
+<nav>
+  <a href="#daily-resources">Today</a>
+  <a href="#prayer-before-mass">Before Mass</a>
+  <a href="#thanksgiving">After Mass</a>
+  <a href="#rosary">Rosary</a>
+  <a href="#divine-mercy">Divine Mercy</a>
+  <a href="#morning-prayers">Morning</a>
+  <a href="#evening-prayers">Evening</a>
+</nav>
+
+<main>
+  <!-- Daily Resources -->
+  <div class="daily-resources" id="daily-resources">
+    <a class="resource-card" id="bible-year-link" href="#" target="_blank" rel="noopener">
+      <span class="resource-icon">📖</span>
+      <h3>Bible in a Year</h3>
+      <span class="resource-detail" id="bible-day-label">Day --</span>
+      <span class="resource-sub">Fr. Mike Schmitz</span>
+    </a>
+    <a class="resource-card" id="readings-link" href="#" target="_blank" rel="noopener">
+      <span class="resource-icon">📜</span>
+      <h3>Daily Mass Readings</h3>
+      <span class="resource-detail" id="readings-date-label">Loading...</span>
+      <span class="resource-sub">The Word Today TV</span>
+    </a>
+    <a class="resource-card" id="usccb-link" href="#" target="_blank" rel="noopener">
+      <span class="resource-icon">✝&#xFE0E;</span>
+      <h3>USCCB Readings</h3>
+      <span class="resource-detail" id="usccb-date-label">Loading...</span>
+      <span class="resource-sub">bible.usccb.org</span>
+    </a>
+  </div>
+
+  <!-- Saint of the Day -->
+  <div class="saint-card" id="saint-card" style="display:none;">
+    <div class="saint-header">
+      <span class="saint-icon">🕊</span>
+      <div>
+        <h3 class="saint-label">Saint of the Day</h3>
+        <p class="saint-name" id="saint-name"></p>
+      </div>
+    </div>
+    <div class="saint-details">
+      <p class="saint-patron" id="saint-patron"></p>
+      <p class="saint-fact" id="saint-fact"></p>
+    </div>
+  </div>
+
+  <button class="toggle-all" onclick="toggleAll()">Expand All</button>
+
+  <!-- 1. Prayer Before Mass -->
+  <div class="prayer-card" id="prayer-before-mass">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Prayer Before Mass<span class="subtitle">St. Thomas Aquinas</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Almighty and ever-living God, I approach the sacrament of Your only-begotten Son Our Lord Jesus Christ. I come sick to the doctor of life, unclean to the fountain of mercy, blind to the radiance of eternal light, and poor and needy to the Lord of heaven and earth.</p>
+        <p class="prayer-text">Lord, in Your great generosity, heal my sickness, wash away my defilement, enlighten my blindness, enrich my poverty, and clothe my nakedness.</p>
+        <p class="prayer-text">May I receive the bread of angels, the King of kings and Lord of lords, with humble reverence, with the purity and faith, the repentance and love, and the determined purpose that will help to bring me to salvation.</p>
+        <p class="prayer-text">May I receive the sacrament of the Lord's Body and Blood, and its reality and power.</p>
+        <p class="prayer-text">Kind God, may I receive the Body of Your only-begotten Son, our Lord Jesus Christ, born from the womb of the Virgin Mary, and so be received into His mystical body and numbered among His members.</p>
+        <p class="prayer-text">Loving Father, as on my earthly pilgrimage I now receive Your beloved Son under the veil of a sacrament, may I one day see Him face to face in glory, who lives and reigns with You forever.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Prayer After Mass -->
+  <div class="prayer-card" id="thanksgiving">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Prayer of Thanksgiving After Mass<span class="subtitle">St. Thomas Aquinas</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Lord, Father all-powerful and ever-living God, I thank You, for even though I am a sinner, your unprofitable servant, not because of my worth but in the kindness of your mercy, You have fed me with the Precious Body &amp; Blood of Your Son, our Lord Jesus Christ.</p>
+        <p class="prayer-text">I pray that this Holy Communion may not bring me condemnation and punishment but forgiveness and salvation. May it be a helmet of faith and a shield of good will. May it purify me from evil ways and put an end to my evil passions. May it bring me charity and patience, humility and obedience, and growth in the power to do good. May it be my strong defense against all my enemies, visible and invisible, and the perfect calming of all my evil impulses, bodily and spiritual. May it unite me more closely to you, the One true God, and lead me safely through death to everlasting happiness with You.</p>
+        <p class="prayer-text">And I pray that You will lead me, a sinner, to the banquet where you, with Your Son and holy Spirit, are true and perfect light, total fulfillment, everlasting joy, gladness without end, and perfect happiness to your saints. Grant this through Christ our Lord,</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. The Holy Rosary -->
+  <div class="prayer-card" id="rosary">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>The Holy Rosary<span class="subtitle" id="rosary-mystery-subtitle">Loading...</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+
+        <h3>Opening</h3>
+        <p class="instruction">Make the Sign of the Cross and pray the Apostles' Creed on the crucifix.</p>
+
+        <div class="step">
+          <span class="step-label">Apostles' Creed</span>
+          <p class="prayer-text">I believe in God, the Father Almighty, Creator of heaven and earth; and in Jesus Christ, His only Son, our Lord; who was conceived by the Holy Spirit, born of the Virgin Mary; suffered under Pontius Pilate, was crucified, died and was buried. He descended into hell; the third day He rose again from the dead; He ascended into heaven, and is seated at the right hand of God the Father Almighty; from thence He shall come to judge the living and the dead. I believe in the Holy Spirit, the Holy Catholic Church, the communion of Saints, the forgiveness of sins, the resurrection of the body, and life everlasting. Amen.</p>
+        </div>
+
+        <p class="instruction">Pray one Our Father, three Hail Marys (for faith, hope, and charity), and one Glory Be.</p>
+
+        <div class="divider"></div>
+        <h3 id="rosary-mystery-title">Today's Mysteries</h3>
+
+        <div id="rosary-mysteries">
+          <!-- Filled by JS -->
+        </div>
+
+        <p class="instruction">After each decade: pray the Glory Be, then the Fatima Prayer below.</p>
+
+        <div class="step">
+          <span class="step-label">Fatima Prayer (after each decade)</span>
+          <p class="prayer-text">O my Jesus, forgive us our sins, save us from the fires of hell, lead all souls to Heaven, especially those in most need of Thy mercy.</p>
+        </div>
+
+        <div class="divider"></div>
+        <h3>Closing</h3>
+
+        <div class="step">
+          <span class="step-label">Hail Holy Queen</span>
+          <p class="prayer-text">Hail, Holy Queen, Mother of Mercy, our life, our sweetness, and our hope. To thee do we cry, poor banished children of Eve. To thee do we send up our sighs, mourning and weeping in this valley of tears. Turn then, most gracious advocate, thine eyes of mercy toward us, and after this our exile, show unto us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">Final Prayer</span>
+          <p class="prayer-text">O God, whose Only Begotten Son, by His life, Death, and Resurrection, has purchased for us the rewards of eternal life, grant, we beseech Thee, that by meditating upon these mysteries of the Most Holy Rosary of the Blessed Virgin Mary, we may imitate what they contain and obtain what they promise, through the same Christ our Lord. Amen.</p>
+        </div>
+
+        <p class="instruction">End with the Sign of the Cross.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Chaplet of Divine Mercy -->
+  <div class="prayer-card" id="divine-mercy">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Chaplet of Divine Mercy<span class="subtitle">Prayed on Rosary Beads</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+
+        <h3>Opening</h3>
+        <p class="instruction">Begin with the Sign of the Cross.</p>
+
+        <div class="step">
+          <span class="step-label">Optional Opening Prayer</span>
+          <p class="prayer-text">You expired, Jesus, but the source of life gushed forth for souls, and the ocean of mercy opened up for the whole world. O Fount of Life, unfathomable Divine Mercy, envelop the whole world and empty Yourself out upon us.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">Repeat 3 times</span>
+          <p class="prayer-text">O Blood and Water, which gushed forth from the Heart of Jesus as a fountain of Mercy for us, I trust in You!</p>
+        </div>
+
+        <p class="instruction">Then pray one Our Father, one Hail Mary, and the Apostles' Creed.</p>
+
+        <div class="divider"></div>
+        <h3>The Five Decades</h3>
+
+        <div class="step">
+          <span class="step-label">On each "Our Father" bead</span>
+          <p class="prayer-text">Eternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, Our Lord Jesus Christ, in atonement for our sins and those of the whole world.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">On each of the 10 "Hail Mary" beads</span>
+          <p class="prayer-text">For the sake of His sorrowful Passion, have mercy on us and on the whole world.</p>
+        </div>
+
+        <p class="repeat-note">↻ Repeat for all five decades</p>
+
+        <div class="divider"></div>
+        <h3>Closing</h3>
+
+        <div class="step">
+          <span class="step-label">Repeat 3 times</span>
+          <p class="prayer-text">Holy God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">Optional Closing Prayer</span>
+          <p class="prayer-text">Eternal God, in whom mercy is endless and the treasury of compassion inexhaustible, look kindly upon us, and increase Your mercy in us, that in difficult moments, we might not despair nor become despondent, but with great confidence, submit ourselves to Your holy will, which is Love and Mercy itself.</p>
+        </div>
+
+        <p class="instruction">End with the Sign of the Cross.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MORNING PRAYERS ═══════════════ -->
+  <div class="section-divider" id="morning-prayers"><h2>Morning Prayers</h2></div>
+
+  <!-- Morning 1. Morning Offering -->
+  <div class="prayer-card" id="morning-offering">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Morning Offering<span class="subtitle">Beginning the Day</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">In the name of our Lord Jesus Christ I will begin this day. I thank You, Lord, for having preserved me during the night. I will do my best to make all I do today pleasing to You and in accordance with Your Holy Will. My dear mother Mary, watch over me this day. My Guardian Angel, take care of me. St. Joseph and all you saints of God, pray for me.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 2. Daily Offering through the Immaculate Heart -->
+  <div class="prayer-card" id="daily-offering">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Daily Offering<span class="subtitle">Through the Immaculate Heart of Mary</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">O Jesus, through the Immaculate Heart of Mary, I offer You my prayers, works, joys, and sufferings of this day in union with the Holy Sacrifice of the Mass throughout the world. I offer them for all the intentions of Your Sacred Heart: the salvation of souls, reparation for sin, and the reunion of all Christians. I offer them for the intentions of our bishops and of all Apostles of Prayer, and in particular for those recommended by our Holy Father this month.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 3. The Magnificat -->
+  <div class="prayer-card" id="magnificat">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>The Magnificat<span class="subtitle">Canticle of Mary — Luke 1:46–55</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">My soul proclaims the greatness of the Lord, my spirit rejoices in God my Savior, for He has looked with favor on His lowly servant. From this day all generations will call me blessed: the Almighty has done great things for me, and holy is His Name.</p>
+        <p class="prayer-text">He has mercy on those who fear Him in every generation. He has shown the strength of His arm, He has scattered the proud in their conceit. He has cast down the mighty from their thrones, and has lifted up the lowly.</p>
+        <p class="prayer-text">He has filled the hungry with good things, and the rich He has sent away empty. He has come to the help of His servant Israel for He has remembered His promise of mercy, the promise He made to our fathers, to Abraham and his children forever.</p>
+        <p class="prayer-text">Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 4. Our Father -->
+  <div class="prayer-card" id="our-father-morning">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Our Father</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Our Father, who art in heaven, hallowed be Thy name. Thy kingdom come, Thy will be done, on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us. And lead us not into temptation, but deliver us from evil.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 5. Three Hail Marys -->
+  <div class="prayer-card" id="hail-marys-morning">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Three Hail Marys<span class="subtitle">For Faith, Hope, and Charity</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="instruction">Pray three times, once each for the virtues of Faith, Hope, and Charity.</p>
+        <p class="prayer-text">Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 6. Glory Be -->
+  <div class="prayer-card" id="glory-be-morning">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Glory Be</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 7. Act of Contrition -->
+  <div class="prayer-card" id="act-of-contrition-morning">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Act of Contrition</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">O my God, I am heartily sorry for having offended Thee, and I detest all my sins because I dread the loss of heaven and the pains of hell, but most of all because they offend Thee, my God, Who art all good and deserving of all my love. I firmly resolve, with the help of Thy grace, to confess my sins, to do penance, and to amend my life.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 8. The Jesus Prayer -->
+  <div class="prayer-card" id="jesus-prayer">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>The Jesus Prayer<span class="subtitle">The Prayer of the Heart</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Lord Jesus Christ, Son of God, have mercy on me, a sinner.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 9. The Angelus -->
+  <div class="prayer-card" id="angelus">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>The Angelus<span class="subtitle">Traditionally prayed at 6 AM, Noon, and 6 PM</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <div class="step">
+          <p class="prayer-text">V. The Angel of the Lord declared unto Mary,</p>
+          <p class="prayer-text">R. And she conceived of the Holy Spirit.</p>
+          <p class="prayer-text" style="margin-top:0.5rem;">Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen.</p>
+        </div>
+
+        <div class="step">
+          <p class="prayer-text">V. Behold the handmaid of the Lord,</p>
+          <p class="prayer-text">R. Be it done unto me according to Thy Word.</p>
+          <p class="prayer-text" style="margin-top:0.5rem;">Hail Mary...</p>
+        </div>
+
+        <div class="step">
+          <p class="prayer-text">V. And the Word was made flesh,</p>
+          <p class="prayer-text">R. And dwelt among us.</p>
+          <p class="prayer-text" style="margin-top:0.5rem;">Hail Mary...</p>
+        </div>
+
+        <div class="step">
+          <p class="prayer-text">V. Pray for us, O holy Mother of God,</p>
+          <p class="prayer-text">R. That we may be made worthy of the promises of Christ.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">Let us pray</span>
+          <p class="prayer-text">Pour forth, we beseech Thee, O Lord, Thy grace into our hearts; that we, to whom the Incarnation of Christ, Thy Son, was made known by the message of an angel, may by His Passion and Cross be brought to the glory of His Resurrection, through the same Christ our Lord.</p>
+          <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 10. Prayer to St. Michael the Archangel -->
+  <div class="prayer-card" id="st-michael">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Prayer to St. Michael the Archangel<span class="subtitle">Pope Leo XIII</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">St. Michael the Archangel, defend us in battle. Be our defense against the wickedness and snares of the devil. May God rebuke him, we humbly pray, and do thou, O Prince of the heavenly hosts, by the power of God, thrust into hell Satan, and all the evil spirits, who prowl about the world seeking the ruin of souls.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 11. Prayer to Guardian Angel -->
+  <div class="prayer-card" id="guardian-angel">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Prayer to My Guardian Angel</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Angel of God, my guardian dear, to whom God's love commits me here, ever this day be at my side, to light and guard, to rule and guide.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 12. Act of Consecration to the Blessed Virgin Mary -->
+  <div class="prayer-card" id="consecration-mary-morning">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Act of Consecration to the Blessed Virgin Mary<span class="subtitle">St. Louis de Montfort</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Oh my Lady, oh my Mother, I offer myself entirely to you. As proof of my filial affection, I consecrate to you on this day: my eyes, my ears, my tongue, my heart; in one word, my entire being. Since I am all yours, oh Good Mother, keep me and defend me as your child, and your possession.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning 13. Sweet Mother Prayer -->
+  <div class="prayer-card" id="sweet-mother-morning">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Sweet Mother Prayer</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Sweet Mother, do not depart, do not take your eyes off me. Come with me everywhere, and never leave me alone. Since you protect me so much, like a true Mother, may the Father, the Son, and the Holy Spirit bless me.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ EVENING PRAYERS ═══════════════ -->
+  <div class="section-divider" id="evening-prayers"><h2>Evening Prayers</h2></div>
+
+  <!-- Evening 1. Evening Thanksgiving -->
+  <div class="prayer-card" id="evening-thanksgiving">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Evening Thanksgiving<span class="subtitle">End of Day</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">My God, at the end of this day I thank You most heartily for all the graces I have received from You this day. I am sorry that I have not made better use of them. I am sorry for all the sins I have committed against You. Forgive me, O my God, and graciously protect me this night. Blessed Virgin Mary, my dear heavenly mother, take me under your protection. St. Joseph, my dear Guardian Angel, and all you saints of God, pray for me.</p>
+        <p class="prayer-text">Sweet heart of Mary, be my salvation.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 2. Act of Contrition -->
+  <div class="prayer-card" id="act-of-contrition-evening">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Act of Contrition</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">O my God, I am heartily sorry for having offended Thee, and I detest all my sins because I dread the loss of heaven and the pains of hell, but most of all because they offend Thee, my God, Who art all good and deserving of all my love. I firmly resolve, with the help of Thy grace, to confess my sins, to do penance, and to amend my life.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 3. Our Father -->
+  <div class="prayer-card" id="our-father-evening">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Our Father</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Our Father, who art in heaven, hallowed be Thy name. Thy kingdom come, Thy will be done, on earth as it is in heaven. Give us this day our daily bread, and forgive us our trespasses, as we forgive those who trespass against us. And lead us not into temptation, but deliver us from evil.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 4. Three Hail Marys -->
+  <div class="prayer-card" id="hail-marys-evening">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Three Hail Marys<span class="subtitle">For Faith, Hope, and Charity</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="instruction">Pray three times, once each for the virtues of Faith, Hope, and Charity.</p>
+        <p class="prayer-text">Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 5. Night Prayer Invocation -->
+  <div class="prayer-card" id="night-invocation">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Night Prayer Invocation<span class="subtitle">Compline Opening</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">V. God, come to my assistance.</p>
+        <p class="prayer-text">R. Lord, make haste to help me.</p>
+        <p class="prayer-text" style="margin-top:1rem;">Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end. Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 6. Offering to the Sacred Heart -->
+  <div class="prayer-card" id="sacred-heart">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Offering to the Sacred Heart<span class="subtitle">Three Intentions with Glory Be</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Eternal Father, I offer Thee the Sacred Heart of Jesus, with all its love, all its sufferings and all its merits.</p>
+
+        <div class="step">
+          <span class="step-label">First</span>
+          <p class="prayer-text">To expiate all the sins I have committed this day and during all my life.</p>
+          <p class="glory-be">Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end. Amen.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">Second</span>
+          <p class="prayer-text">To purify the good I have done poorly this day and during all my life.</p>
+          <p class="glory-be">Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end. Amen.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-label">Third</span>
+          <p class="prayer-text">To supply for the good I ought to have done, and that I have neglected this day and all my life.</p>
+          <p class="glory-be">Glory be to the Father, and to the Son, and to the Holy Spirit. As it was in the beginning, is now, and ever shall be, world without end. Amen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 7. Eternal Rest -->
+  <div class="prayer-card" id="eternal-rest">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Eternal Rest<span class="subtitle">Prayer for the Faithful Departed</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Eternal rest grant unto them, O Lord, and let perpetual light shine upon them. May the souls of all the faithful departed, through the mercy of God, rest in peace.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 8. Prayer to Our Lady of the Miraculous Medal -->
+  <div class="prayer-card" id="miraculous-medal">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Prayer to Our Lady of the Miraculous Medal<span class="subtitle">The Immaculate Conception</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">O Virgin Mother of God, Mary Immaculate, we dedicate and consecrate ourselves to you under the title of Our Lady of the Miraculous Medal. May this Medal be for each one of us a sure sign of your affection for us and a constant reminder of our duties toward you.</p>
+        <p class="prayer-text">Ever while wearing it, may we be blessed by your loving protection and preserved in the grace of your Son. O most powerful Virgin, Mother of our Savior, keep us close to you every moment of our lives.</p>
+        <p class="prayer-text">Obtain for us, your children, the grace of a happy death; so that, in union with you, we may enjoy the bliss of heaven forever.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">O Mary, conceived without sin, pray for us who have recourse to thee.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 9. Act of Consecration to the Blessed Virgin Mary -->
+  <div class="prayer-card" id="consecration-mary-evening">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Act of Consecration to the Blessed Virgin Mary<span class="subtitle">St. Louis de Montfort</span></h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Oh my Lady, oh my Mother, I offer myself entirely to you. As proof of my filial affection, I consecrate to you on this day: my eyes, my ears, my tongue, my heart; in one word, my entire being. Since I am all yours, oh Good Mother, keep me and defend me as your child, and your possession.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evening 10. Sweet Mother Prayer -->
+  <div class="prayer-card" id="sweet-mother-evening">
+    <div class="prayer-header" onclick="toggle(this)">
+      <h2>Sweet Mother Prayer</h2>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="prayer-body">
+      <div class="prayer-content">
+        <p class="prayer-text">Sweet Mother, do not depart, do not take your eyes off me. Come with me everywhere, and never leave me alone. Since you protect me so much, like a true Mother, may the Father, the Son, and the Holy Spirit bless me.</p>
+        <p class="prayer-text" style="text-align:center; margin-top:1rem;">Amen.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>✝&#xFE0E; Ad Maiorem Dei Gloriam ✝&#xFE0E;</p>
+</footer>
+
+<script>
+  function toggle(header) {
+    const card = header.closest('.prayer-card');
+    card.classList.toggle('open');
+    updateToggleButton();
+  }
+
+  function toggleAll() {
+    const cards = document.querySelectorAll('.prayer-card');
+    const btn = document.querySelector('.toggle-all');
+    const allOpen = [...cards].every(c => c.classList.contains('open'));
+
+    cards.forEach(card => {
+      if (allOpen) {
+        card.classList.remove('open');
+      } else {
+        card.classList.add('open');
+      }
+    });
+    updateToggleButton();
+  }
+
+  function updateToggleButton() {
+    const cards = document.querySelectorAll('.prayer-card');
+    const btn = document.querySelector('.toggle-all');
+    const allOpen = [...cards].every(c => c.classList.contains('open'));
+    btn.textContent = allOpen ? 'Collapse All' : 'Expand All';
+  }
+
+  // Daily resources - calculate day of year and set links
+  (function() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+
+    // Set Bible in a Year link (YouTube search for the day's episode)
+    const searchQuery = encodeURIComponent('Bible in a Year Day ' + dayOfYear + ' Fr Mike Schmitz');
+    document.getElementById('bible-year-link').href = 'https://www.youtube.com/results?search_query=' + searchQuery;
+    document.getElementById('bible-day-label').textContent = 'Day ' + dayOfYear;
+
+  })();
+
+  // Set Daily Mass Readings link (YouTube search for The Word Today TV)
+  (function() {
+    var now = new Date();
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var monthName = months[now.getMonth()];
+    var day = now.getDate();
+    var year = now.getFullYear();
+    var dateStr = monthName + ' ' + day + ', ' + year;
+
+    var searchQuery = encodeURIComponent('The Word Today TV catholic daily readings ' + monthName + ' ' + day + ' ' + year);
+    document.getElementById('readings-link').href = 'https://www.youtube.com/results?search_query=' + searchQuery;
+    document.getElementById('readings-date-label').textContent = dateStr;
+
+    // Set USCCB Readings link (direct URL pattern: MMDDYY.cfm)
+    var mm = String(now.getMonth() + 1).padStart(2, '0');
+    var dd = String(day).padStart(2, '0');
+    var yy = String(year).slice(-2);
+    document.getElementById('usccb-link').href = 'https://bible.usccb.org/bible/readings/' + mm + dd + yy + '.cfm';
+    document.getElementById('usccb-date-label').textContent = dateStr;
+  })();
+
+  // Liturgical season accent color
+  (function() {
+    // Compute Easter Sunday using the Anonymous Gregorian algorithm
+    function easterDate(year) {
+      var a = year % 19;
+      var b = Math.floor(year / 100);
+      var c = year % 100;
+      var d = Math.floor(b / 4);
+      var e = b % 4;
+      var f = Math.floor((b + 8) / 25);
+      var g = Math.floor((b - f + 1) / 3);
+      var h = (19 * a + b - d - g + 15) % 30;
+      var i = Math.floor(c / 4);
+      var k = c % 4;
+      var l = (32 + 2 * e + 2 * i - h - k) % 7;
+      var m = Math.floor((a + 11 * h + 22 * l) / 451);
+      var month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+      var day = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(year, month, day);
+    }
+
+    function toLiturgicalSeason(date) {
+      var year = date.getFullYear();
+      var easter = easterDate(year);
+
+      // Key dates derived from Easter
+      var ashWednesday = new Date(easter); ashWednesday.setDate(easter.getDate() - 46);
+      var holyThursday = new Date(easter); holyThursday.setDate(easter.getDate() - 3);
+      var goodFriday = new Date(easter); goodFriday.setDate(easter.getDate() - 2);
+      var palmSunday = new Date(easter); palmSunday.setDate(easter.getDate() - 7);
+      var pentecost = new Date(easter); pentecost.setDate(easter.getDate() + 49);
+
+      // Christmas season: Dec 25 through Baptism of the Lord (Sunday after Jan 6)
+      var christmas = new Date(year, 11, 25);
+      var jan6 = new Date(year, 0, 6);
+      // Baptism of the Lord: Sunday after Jan 6 (or Jan 7 if Jan 6 is Sunday)
+      var baptism = new Date(jan6);
+      if (jan6.getDay() === 0) {
+        baptism.setDate(7);
+      } else {
+        baptism.setDate(6 + (7 - jan6.getDay()));
+      }
+
+      // Advent: 4 Sundays before Christmas
+      var advent = new Date(year, 11, 25);
+      var christmasDay = advent.getDay();
+      advent.setDate(25 - christmasDay - 21); // Go back to 4th Sunday before Christmas
+
+      // Normalize date for comparison (strip time)
+      var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+      // Check seasons in order
+      if (d >= christmas) return 'christmas';
+      if (d >= advent) return 'advent';
+      if (d >= pentecost) return 'ordinary';
+      if (d >= easter) return 'easter';
+      if (d.getTime() === goodFriday.getTime() || d.getTime() === palmSunday.getTime()) return 'passion';
+      if (d >= ashWednesday) return 'lent';
+      if (d <= baptism) return 'christmas';
+      return 'ordinary';
+    }
+
+    var season = toLiturgicalSeason(new Date());
+    var root = document.documentElement;
+
+    // Set accent colors based on liturgical season
+    var colors = {
+      advent:    { accent: '#9b72b0', dim: '#7d5a91', glow: 'rgba(155, 114, 176, 0.12)' },
+      christmas: { accent: '#d4af37', dim: '#b8962e', glow: 'rgba(212, 175, 55, 0.12)' },
+      lent:      { accent: '#9b72b0', dim: '#7d5a91', glow: 'rgba(155, 114, 176, 0.12)' },
+      passion:   { accent: '#c0392b', dim: '#a33225', glow: 'rgba(192, 57, 43, 0.12)' },
+      easter:    { accent: '#d4af37', dim: '#b8962e', glow: 'rgba(212, 175, 55, 0.12)' },
+      ordinary:  { accent: '#5a9e6f', dim: '#4a8a5e', glow: 'rgba(90, 158, 111, 0.12)' }
+    };
+
+    var c = colors[season] || colors.ordinary;
+    root.style.setProperty('--accent', c.accent);
+    root.style.setProperty('--accent-dim', c.dim);
+    root.style.setProperty('--accent-glow', c.glow);
+
+    // Update selection color to match
+    var style = document.createElement('style');
+    style.textContent = '::selection { background: ' + c.accent + '59; }';
+    document.head.appendChild(style);
+
+    // Show current season in footer
+    var seasonNames = {
+      advent: 'Advent', christmas: 'Christmas', lent: 'Lent',
+      passion: 'Holy Week', easter: 'Easter', ordinary: 'Ordinary Time'
+    };
+    var footer = document.querySelector('footer p');
+    if (footer) {
+      footer.textContent = '\u271D\uFE0E ' + seasonNames[season] + ' \u00B7 Ad Maiorem Dei Gloriam \u271D\uFE0E';
+    }
+
+    // Calculate and display the specific liturgical day name
+    function getLiturgicalDay(date) {
+      var year = date.getFullYear();
+      var easter = easterDate(year);
+      var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var ordinals = ['','First','Second','Third','Fourth','Fifth','Sixth','Seventh',
+        'Eighth','Ninth','Tenth','Eleventh','Twelfth','Thirteenth','Fourteenth',
+        'Fifteenth','Sixteenth','Seventeenth','Eighteenth','Nineteenth','Twentieth',
+        'Twenty-First','Twenty-Second','Twenty-Third','Twenty-Fourth','Twenty-Fifth',
+        'Twenty-Sixth','Twenty-Seventh','Twenty-Eighth','Twenty-Ninth','Thirtieth',
+        'Thirty-First','Thirty-Second','Thirty-Third','Thirty-Fourth'];
+
+      var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      var dow = d.getDay();
+      var dayName = dayNames[dow];
+
+      function daysDiff(a, b) { return Math.floor((a - b) / 86400000); }
+
+      // Key dates
+      var ashWed = new Date(easter); ashWed.setDate(easter.getDate() - 46);
+      var firstSunLent = new Date(easter); firstSunLent.setDate(easter.getDate() - 42);
+      var palmSun = new Date(easter); palmSun.setDate(easter.getDate() - 7);
+      var pentecost = new Date(easter); pentecost.setDate(easter.getDate() + 49);
+      var christmas = new Date(year, 11, 25);
+
+      // Advent start
+      var adventStart = new Date(year, 11, 25);
+      var cDay = adventStart.getDay();
+      adventStart.setDate(25 - cDay - 21);
+
+      // Baptism of the Lord
+      var jan6 = new Date(year, 0, 6);
+      var baptism = new Date(jan6);
+      if (jan6.getDay() === 0) { baptism.setDate(7); }
+      else { baptism.setDate(6 + (7 - jan6.getDay())); }
+
+      // Special named days
+      if (d.getTime() === easter.getTime()) return 'Easter Sunday';
+      if (d.getTime() === ashWed.getTime()) return 'Ash Wednesday';
+      if (d.getTime() === palmSun.getTime()) return 'Palm Sunday';
+      if (daysDiff(d, easter) === -3) return 'Holy Thursday';
+      if (daysDiff(d, easter) === -2) return 'Good Friday';
+      if (daysDiff(d, easter) === -1) return 'Holy Saturday';
+      if (d.getTime() === pentecost.getTime()) return 'Pentecost Sunday';
+      if (d.getTime() === baptism.getTime()) return 'The Baptism of the Lord';
+      if (d.getMonth() === 11 && d.getDate() === 25) return 'The Nativity of the Lord';
+      if (d.getMonth() === 0 && d.getDate() === 1) return 'Solemnity of Mary, Mother of God';
+      if (d.getMonth() === 0 && d.getDate() === 6) return 'The Epiphany of the Lord';
+
+      // Holy Week (Mon–Wed)
+      if (d > palmSun && daysDiff(d, easter) < -3) {
+        return dayName + ' of Holy Week';
+      }
+
+      // Easter Octave
+      var octaveEnd = new Date(easter); octaveEnd.setDate(easter.getDate() + 7);
+      if (d > easter && d <= octaveEnd) {
+        if (dow === 0) return 'Second Sunday of Easter';
+        return dayName + ' of the Octave of Easter';
+      }
+
+      // Lent (Ash Wed to Palm Sunday)
+      if (d > ashWed && d < palmSun) {
+        if (d < firstSunLent) return dayName + ' after Ash Wednesday';
+        var weeksIn = Math.floor(daysDiff(d, firstSunLent) / 7) + 1;
+        if (dow === 0) return ordinals[weeksIn] + ' Sunday of Lent';
+        return dayName + ' of the ' + ordinals[weeksIn] + ' Week of Lent';
+      }
+
+      // Easter season (after octave to Pentecost)
+      if (d > octaveEnd && d < pentecost) {
+        var weeksFromEaster = Math.floor(daysDiff(d, easter) / 7) + 1;
+        if (dow === 0) return ordinals[weeksFromEaster] + ' Sunday of Easter';
+        return dayName + ' of the ' + ordinals[weeksFromEaster] + ' Week of Easter';
+      }
+
+      // Advent
+      if (d >= adventStart && d < christmas) {
+        var weeksIn = Math.floor(daysDiff(d, adventStart) / 7) + 1;
+        if (dow === 0) return ordinals[weeksIn] + ' Sunday of Advent';
+        return dayName + ' of the ' + ordinals[weeksIn] + ' Week of Advent';
+      }
+
+      // Christmas season (Dec 25+ or Jan through Baptism)
+      if (d > christmas) {
+        var daysAfter = daysDiff(d, christmas);
+        if (daysAfter <= 7) return ordinals[daysAfter + 1] + ' Day of Christmas';
+        return dayName + ' of the Christmas Season';
+      }
+      if (d < baptism && d.getMonth() === 0) {
+        return dayName + ' of the Christmas Season';
+      }
+
+      // Ordinary Time — count backwards from Advent to get correct week number
+      if (d > pentecost && d < adventStart) {
+        var satBeforeAdvent = new Date(adventStart); satBeforeAdvent.setDate(adventStart.getDate() - 1);
+        var daysToEnd = daysDiff(satBeforeAdvent, d);
+        var weeksFromEnd = Math.floor(daysToEnd / 7);
+        var weekNum = 34 - weeksFromEnd;
+        if (dow === 0) return ordinals[weekNum] + ' Sunday in Ordinary Time';
+        return dayName + ' of the ' + ordinals[weekNum] + ' Week in Ordinary Time';
+      }
+
+      // Ordinary Time — early (Baptism to Ash Wednesday)
+      if (d > baptism && d < ashWed) {
+        var mondayAfterBaptism = new Date(baptism); mondayAfterBaptism.setDate(baptism.getDate() + 1);
+        var daysIn = daysDiff(d, mondayAfterBaptism);
+        var weekNum = Math.floor(daysIn / 7) + 2;
+        if (dow === 0) return ordinals[weekNum] + ' Sunday in Ordinary Time';
+        return dayName + ' of the ' + ordinals[weekNum] + ' Week in Ordinary Time';
+      }
+
+      return dayName;
+    }
+
+    var liturgicalDayLabel = document.getElementById('liturgical-day-label');
+    if (liturgicalDayLabel) {
+      liturgicalDayLabel.textContent = getLiturgicalDay(new Date());
+    }
+  })();
+
+  // Rosary Mysteries of the Day
+  (function() {
+    var mysteries = {
+      joyful: {
+        name: 'Joyful Mysteries',
+        days: 'Monday & Saturday',
+        decades: [
+          {t:'First Decade', m:'The Annunciation', d:'The Angel Gabriel announces to Mary that she will conceive the Son of God.'},
+          {t:'Second Decade', m:'The Visitation', d:'Mary visits her cousin Elizabeth, who is pregnant with John the Baptist.'},
+          {t:'Third Decade', m:'The Nativity', d:'Jesus is born in a stable in Bethlehem.'},
+          {t:'Fourth Decade', m:'The Presentation', d:'Mary and Joseph present the infant Jesus in the Temple.'},
+          {t:'Fifth Decade', m:'The Finding in the Temple', d:'After three days of searching, Mary and Joseph find the twelve-year-old Jesus teaching in the Temple.'}
+        ]
+      },
+      sorrowful: {
+        name: 'Sorrowful Mysteries',
+        days: 'Tuesday & Friday',
+        decades: [
+          {t:'First Decade', m:'The Agony in the Garden', d:'Jesus prays in the Garden of Gethsemane, sweating blood in anguish.'},
+          {t:'Second Decade', m:'The Scourging at the Pillar', d:'Jesus is tied to a pillar and scourged by Roman soldiers.'},
+          {t:'Third Decade', m:'The Crowning with Thorns', d:'The soldiers place a crown of thorns on Jesus\' head and mock Him.'},
+          {t:'Fourth Decade', m:'The Carrying of the Cross', d:'Jesus carries His Cross through the streets of Jerusalem to Calvary.'},
+          {t:'Fifth Decade', m:'The Crucifixion', d:'Jesus is nailed to the Cross and dies for the salvation of the world.'}
+        ]
+      },
+      glorious: {
+        name: 'Glorious Mysteries',
+        days: 'Wednesday & Sunday',
+        decades: [
+          {t:'First Decade', m:'The Resurrection', d:'Jesus rises from the dead on the third day.'},
+          {t:'Second Decade', m:'The Ascension', d:'Jesus ascends into Heaven forty days after His Resurrection.'},
+          {t:'Third Decade', m:'The Descent of the Holy Spirit', d:'The Holy Spirit descends upon Mary and the Apostles at Pentecost.'},
+          {t:'Fourth Decade', m:'The Assumption', d:'Mary is taken body and soul into heavenly glory.'},
+          {t:'Fifth Decade', m:'The Coronation of Mary', d:'Mary is crowned Queen of Heaven and Earth.'}
+        ]
+      },
+      luminous: {
+        name: 'Luminous Mysteries',
+        days: 'Thursday',
+        decades: [
+          {t:'First Decade', m:'The Baptism of Jesus', d:'Jesus is baptized in the Jordan River and the Father\'s voice proclaims Him the Beloved Son.'},
+          {t:'Second Decade', m:'The Wedding at Cana', d:'At Mary\'s request, Jesus performs His first miracle, turning water into wine.'},
+          {t:'Third Decade', m:'The Proclamation of the Kingdom', d:'Jesus proclaims the Kingdom of God and calls all to conversion.'},
+          {t:'Fourth Decade', m:'The Transfiguration', d:'Jesus is transfigured on Mount Tabor, revealing His divine glory to Peter, James, and John.'},
+          {t:'Fifth Decade', m:'The Institution of the Eucharist', d:'At the Last Supper, Jesus gives His Body and Blood under the forms of bread and wine.'}
+        ]
+      }
+    };
+
+    // Day of week mapping: 0=Sun, 1=Mon, ..., 6=Sat
+    var dayMap = ['glorious','joyful','sorrowful','glorious','luminous','sorrowful','joyful'];
+    var today = new Date().getDay();
+    var todayMystery = mysteries[dayMap[today]];
+
+    // Set subtitle and title
+    document.getElementById('rosary-mystery-subtitle').textContent = todayMystery.name + ' (' + todayMystery.days + ')';
+    document.getElementById('rosary-mystery-title').textContent = todayMystery.name;
+
+    // Build the decades HTML
+    var container = document.getElementById('rosary-mysteries');
+    var html = '';
+    todayMystery.decades.forEach(function(decade) {
+      html += '<div class="step">';
+      html += '<span class="step-label">' + decade.t + ' — ' + decade.m + '</span>';
+      html += '<p class="prayer-text">' + decade.d + '</p>';
+      html += '<p class="instruction">Pray one Our Father, ten Hail Marys, and one Glory Be.</p>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  })();
+
+  // Saint of the Day
+  (function() {
+    var saints = {
+      // January
+      '1-2': {n:'St. Basil the Great & St. Gregory Nazianzen',p:'Patron saints of hospitals (Basil) and poets (Gregory)',f:'These two close friends from Cappadocia revolutionized Christian theology. They once compiled a collection of Origen\'s writings together while living as monks in the wilderness.'},
+      '1-4': {n:'St. Elizabeth Ann Seton',p:'Patron saint of Catholic schools',f:'She was the first native-born American to be canonized. A widowed mother of five, she founded the first Catholic girls\' school in the nation.'},
+      '1-5': {n:'St. John Neumann',p:'Patron saint of Catholic education',f:'This Czech-born bishop of Philadelphia established the first diocesan Catholic school system in the U.S. and spoke twelve languages.'},
+      '1-7': {n:'St. Raymond of Penyafort',p:'Patron saint of canon lawyers',f:'He compiled the official collection of Church law used for centuries. Legend says he sailed 160 miles from Majorca to Barcelona on his cloak after the king refused him a ship.'},
+      '1-13': {n:'St. Hilary of Poitiers',p:'Patron saint of backward children and those with snake bites',f:'Known as the "Hammer of the Arians," he was exiled to Phrygia for four years for defending the divinity of Christ but continued writing influential theological works.'},
+      '1-17': {n:'St. Anthony of Egypt',p:'Patron saint of basket makers and gravediggers',f:'Considered the father of monasticism, he lived as a hermit in the desert for over 80 years and reportedly lived to be 105 years old.'},
+      '1-20': {n:'St. Sebastian',p:'Patron saint of athletes and soldiers',f:'He survived being shot full of arrows by Roman archers. Nursed back to health, he confronted the emperor again and was beaten to death with clubs.'},
+      '1-21': {n:'St. Agnes',p:'Patron saint of young girls and engaged couples',f:'Martyred at just 12 or 13 years old, she is one of the youngest saints. Each year on her feast day, two lambs are blessed at her church in Rome and their wool is used to make pallia for new archbishops.'},
+      '1-24': {n:'St. Francis de Sales',p:'Patron saint of writers and journalists',f:'He slipped pamphlets under doors in Calvinist Geneva to evangelize when no one would listen to him preach. He eventually converted thousands.'},
+      '1-25': {n:'The Conversion of St. Paul',p:'Patron saint of missionaries and theologians',f:'Paul went from actively persecuting Christians to becoming the most prolific author of the New Testament. He wrote 13 of the 27 books.'},
+      '1-28': {n:'St. Thomas Aquinas',p:'Patron saint of students and universities',f:'His fellow students called him "the Dumb Ox" because of his quiet manner and large build. His teacher, St. Albert the Great, predicted his writings would one day "bellow" across the world.'},
+      '1-31': {n:'St. John Bosco',p:'Patron saint of young people and magicians',f:'He used magic tricks, juggling, and acrobatics to draw street children to his youth centers. He once walked through a dangerous neighborhood protected by a mysterious gray dog that appeared and vanished for years.'},
+      // February
+      '2-3': {n:'St. Blaise',p:'Patron saint of throat ailments',f:'Before his martyrdom, he miraculously saved a boy who was choking on a fish bone. To this day, throats are blessed with crossed candles on his feast.'},
+      '2-5': {n:'St. Agatha',p:'Patron saint of nurses and breast cancer patients',f:'She endured terrible tortures in Sicily for refusing to renounce her faith. Mt. Etna\'s eruptions were said to have been stopped by her intercession.'},
+      '2-6': {n:'St. Paul Miki & Companions',p:'Patron saint of Japan',f:'He and 25 other Catholics were crucified on a hill in Nagasaki in 1597. From the cross, Paul Miki preached his final sermon to the crowd below.'},
+      '2-8': {n:'St. Josephine Bakhita',p:'Patron saint of human trafficking victims',f:'Born in Sudan, she was kidnapped and sold into slavery as a child. After gaining her freedom in Italy, she became a Canossian Sister and was known for her gentle smile.'},
+      '2-10': {n:'St. Scholastica',p:'Patron saint of convulsive children and storms',f:'Twin sister of St. Benedict, she once prayed for a storm to prevent her brother from leaving after dinner. A violent thunderstorm immediately erupted, and Benedict had to stay.'},
+      '2-14': {n:'Sts. Cyril and Methodius',p:'Patron saints of Europe',f:'These brothers invented the Glagolitic alphabet to translate Scripture into Slavonic, laying the foundation for the Cyrillic script used by hundreds of millions today.'},
+      '2-22': {n:'Chair of St. Peter',p:'',f:'This feast celebrates Peter\'s authority as the first pope. An ancient wooden chair, believed to have been used by Peter himself, is encased in the famous bronze throne in St. Peter\'s Basilica.'},
+      // March
+      '3-3': {n:'St. Katharine Drexel',p:'Patron saint of racial justice and philanthropists',f:'Born into one of the wealthiest families in America, she gave away her entire $20 million fortune to fund schools for Native Americans and African Americans.'},
+      '3-4': {n:'St. Casimir',p:'Patron saint of Poland and Lithuania',f:'This prince refused the crown of Hungary and chose a life of prayer instead. He reportedly died at age 25 with his favorite hymn to Mary on his lips.'},
+      '3-7': {n:'Sts. Perpetua and Felicity',p:'Patron saints of mothers and expectant mothers',f:'Perpetua was a noblewoman and Felicity her servant, both martyred together in Carthage in 203 AD. Perpetua\'s prison diary is one of the oldest surviving texts written by a Christian woman.'},
+      '3-8': {n:'St. John of God',p:'Patron saint of hospitals, nurses, and the sick',f:'After a religious conversion so intense that people thought he was insane, he was briefly committed to an asylum. The experience inspired him to devote his life to caring for the sick and poor.'},
+      '3-9': {n:'St. Frances of Rome',p:'Patron saint of automobile drivers',f:'She experienced visions of her guardian angel, who lit her path with a golden light visible only to her, making her the patron of drivers. She balanced a mystical prayer life with being a devoted wife and mother.'},
+      '3-17': {n:'St. Patrick',p:'Patron saint of Ireland and engineers',f:'He was kidnapped from Britain by Irish pirates at age 16 and enslaved for six years as a shepherd. After escaping, he returned to convert the very people who had enslaved him.'},
+      '3-19': {n:'St. Joseph',p:'Patron saint of the Universal Church, workers, and fathers',f:'Despite being one of the most important saints, not a single word spoken by Joseph is recorded in Scripture. He is honored with two feast days: March 19 and May 1.'},
+      '3-23': {n:'St. Turibius of Mogrovejo',p:'Patron saint of Latin American bishops',f:'Though a layman and law professor, he was appointed Archbishop of Lima. He learned local indigenous languages and traveled 18,000 miles on foot through the Andes to visit his diocese.'},
+      '3-25': {n:'The Annunciation',p:'',f:'This solemnity celebrates the Angel Gabriel\'s announcement to Mary and the moment of the Incarnation. It falls exactly nine months before Christmas Day.'},
+      // April
+      '4-2': {n:'St. Francis of Paola',p:'Patron saint of seafarers',f:'When a boatman refused to ferry him across the Strait of Messina, he laid his cloak on the water and sailed across on it with two companions.'},
+      '4-4': {n:'St. Isidore of Seville',p:'Patron saint of the internet and computer technicians',f:'He compiled the Etymologies, a 20-volume encyclopedia that attempted to catalog all human knowledge — essentially the medieval internet. Pope John Paul II named him patron of the internet in 1997.'},
+      '4-5': {n:'St. Vincent Ferrer',p:'Patron saint of builders and plumbers',f:'This Dominican friar was said to have performed over 800 miracles. He preached throughout Europe for 20 years and converted thousands, despite only speaking his native Valencian.'},
+      '4-7': {n:'St. John Baptist de la Salle',p:'Patron saint of teachers',f:'He gave up his wealth and canonry to live with the schoolteachers he trained. He founded the Brothers of the Christian Schools and pioneered teaching in the vernacular instead of Latin.'},
+      '4-11': {n:'St. Stanislaus',p:'Patron saint of Poland',f:'As Bishop of Kraków, he excommunicated King Bolesław II for his cruelties. The king murdered him at the altar during Mass. He is one of Poland\'s most beloved saints.'},
+      '4-21': {n:'St. Anselm',p:'Patron saint of philosophers',f:'His ontological argument for God\'s existence — that God is "that than which nothing greater can be thought" — is still debated in philosophy classrooms a thousand years later.'},
+      '4-23': {n:'St. George',p:'Patron saint of England, soldiers, and scouts',f:'Though famous for the legend of slaying a dragon, the real George was a Roman soldier martyred for his faith around 303 AD. His veneration spread across the entire Christian world.'},
+      '4-25': {n:'St. Mark the Evangelist',p:'Patron saint of Venice and notaries',f:'He wrote the shortest and likely earliest Gospel. Tradition says he was dragged through the streets of Alexandria by a rope around his neck. His relics were famously smuggled to Venice hidden under pork.'},
+      '4-28': {n:'St. Louis de Montfort',p:'Patron saint of preachers',f:'His book "True Devotion to Mary" was lost for 130 years before being discovered in a chest in 1842. Pope John Paul II took his papal motto "Totus Tuus" from Montfort\'s writings.'},
+      '4-29': {n:'St. Catherine of Siena',p:'Patron saint of Europe, nurses, and fire prevention',f:'She could not read or write but dictated hundreds of letters to popes and rulers. She convinced Pope Gregory XI to return to Rome from Avignon, ending the 68-year papal exile.'},
+      // May
+      '5-1': {n:'St. Joseph the Worker',p:'Patron saint of workers and craftsmen',f:'Pope Pius XII established this feast in 1955 as a Catholic counterpoint to the Communist May Day celebrations, honoring the dignity of human labor.'},
+      '5-2': {n:'St. Athanasius',p:'Patron saint of theologians',f:'He was exiled five times for defending the divinity of Christ against Arianism. The phrase "Athanasius contra mundum" (Athanasius against the world) describes his relentless stand.'},
+      '5-3': {n:'Sts. Philip and James',p:'',f:'Philip asked Jesus to "show us the Father," prompting one of the most profound teachings in John\'s Gospel. James, called "the Less" to distinguish him from the other James, led the Church in Jerusalem.'},
+      '5-10': {n:'St. Damien of Molokai',p:'Patron saint of people with leprosy and outcasts',f:'He voluntarily lived among lepers on the Hawaiian island of Molokai for 16 years, eventually contracting the disease himself. He built houses, schools, and coffins with his own hands.'},
+      '5-13': {n:'Our Lady of Fatima',p:'',f:'In 1917, three shepherd children in Portugal reported six apparitions of the Blessed Virgin Mary. The final apparition included the "Miracle of the Sun," witnessed by an estimated 70,000 people.'},
+      '5-14': {n:'St. Matthias',p:'Patron saint of alcoholics and tailors',f:'He was chosen by lot to replace Judas as the twelfth apostle. He is one of the most obscure apostles — almost nothing is known about his later life.'},
+      '5-15': {n:'St. Isidore the Farmer',p:'Patron saint of farmers and rural communities',f:'This humble farm laborer from Madrid was said to have had angels plow his fields while he prayed. His body was found incorrupt 40 years after his death.'},
+      '5-22': {n:'St. Rita of Cascia',p:'Patron saint of impossible causes and abused wives',f:'After her husband\'s murder and her sons\' deaths, she tried three times to enter a convent before being miraculously admitted. She bore a wound on her forehead from meditating on the crown of thorns.'},
+      '5-26': {n:'St. Philip Neri',p:'Patron saint of joy and humor',f:'Known as the "Apostle of Rome" and the humorous saint, he once shaved off half his beard and walked through Rome to cure himself of vanity. He founded the Oratory with an emphasis on music and joy.'},
+      '5-27': {n:'St. Augustine of Canterbury',p:'Patron saint of England',f:'Sent by Pope Gregory the Great to evangelize England, he was so terrified of the mission he turned back once before completing the journey. He eventually converted King Ethelbert of Kent.'},
+      // June
+      '6-1': {n:'St. Justin Martyr',p:'Patron saint of philosophers',f:'He was a pagan philosopher who converted after meeting an old man by the sea who introduced him to the Hebrew prophets. He wrote some of the earliest descriptions of how Christians celebrated the Eucharist.'},
+      '6-3': {n:'St. Charles Lwanga & Companions',p:'Patron saints of African youth and converts',f:'These 22 young Ugandan men and boys were burned alive or beheaded in 1886 for refusing the sexual advances of King Mwanga II and for teaching the faith.'},
+      '6-5': {n:'St. Boniface',p:'Patron saint of Germany and brewers',f:'To prove the powerlessness of pagan gods, he chopped down Thor\'s sacred oak tree at Geismar. When no divine punishment followed, the awestruck crowd converted. He used the wood to build a chapel.'},
+      '6-9': {n:'St. Ephrem',p:'Patron saint of spiritual directors',f:'He wrote the earliest known Marian hymns and composed so many hymns that he earned the title "Harp of the Holy Spirit." He used poetry and music as tools against heresy.'},
+      '6-11': {n:'St. Barnabas',p:'Patron saint of Cyprus and against hailstorms',f:'His real name was Joseph, but the apostles nicknamed him Barnabas meaning "son of encouragement." He sold his property and gave all the money to the apostles.'},
+      '6-13': {n:'St. Anthony of Padua',p:'Patron saint of lost things and the poor',f:'He was such a powerful preacher that even fish supposedly rose from the water to listen. His tongue was found incorrupt when his tomb was opened 30 years after his death.'},
+      '6-21': {n:'St. Aloysius Gonzaga',p:'Patron saint of young students and plague victims',f:'He renounced his inheritance as a marquis to become a Jesuit. He died at 23 from plague contracted while caring for the sick in Rome.'},
+      '6-22': {n:'Sts. John Fisher & Thomas More',p:'Patron saints of politicians and lawyers (More)',f:'Both were executed by Henry VIII for refusing to acknowledge him as head of the Church of England. More famously said at the scaffold: "I die the king\'s good servant, but God\'s first."'},
+      '6-24': {n:'Nativity of St. John the Baptist',p:'Patron saint of baptism and converts',f:'Only three birthdays are celebrated in the liturgical calendar: Jesus, Mary, and John the Baptist. His feast falls exactly six months before Christmas, reflecting the Gospel account.'},
+      '6-28': {n:'St. Irenaeus',p:'Patron saint of apologists',f:'A student of St. Polycarp, who was a student of the Apostle John, he provides a direct link to the apostolic era. His work "Against Heresies" is one of the most important early Christian texts.'},
+      '6-29': {n:'Sts. Peter and Paul',p:'Patron saints of Rome',f:'Tradition holds both were martyred in Rome on the same day: Peter was crucified upside down, and Paul was beheaded. Their shared feast has been celebrated since at least the year 258.'},
+      // July
+      '7-1': {n:'St. Junípero Serra',p:'Patron saint of vocations and Hispanic Americans',f:'He founded nine of the 21 California missions, walking thousands of miles despite a chronically infected leg. Many California cities (San Francisco, San Diego, Santa Clara) trace their origins to his missions.'},
+      '7-3': {n:'St. Thomas the Apostle',p:'Patron saint of architects and India',f:'Known as "Doubting Thomas," he later traveled further than any other apostle, reaching India where he established Christian communities that still exist today, 2000 years later.'},
+      '7-6': {n:'St. Maria Goretti',p:'Patron saint of youth, purity, and crime victims',f:'She was murdered at age 11 for resisting an assault. On her deathbed she forgave her attacker, who later converted in prison after she appeared to him in a dream. He attended her canonization.'},
+      '7-11': {n:'St. Benedict',p:'Patron saint of Europe and students',f:'His Rule of St. Benedict, written around 530, is still followed by thousands of monasteries worldwide. His famous motto "Ora et Labora" (pray and work) shaped Western civilization.'},
+      '7-14': {n:'St. Kateri Tekakwitha',p:'Patron saint of ecology and Native Americans',f:'She was the first Native American to be canonized. Smallpox left her partially blind and scarred, but after her death, witnesses reported her scars vanished and her face became radiantly beautiful.'},
+      '7-15': {n:'St. Bonaventure',p:'Patron saint of bowel disorders',f:'Called the "Seraphic Doctor," he was a Franciscan theologian so brilliant that St. Thomas Aquinas, upon seeing him writing, said: "Let us leave one saint to work for another."'},
+      '7-16': {n:'Our Lady of Mount Carmel',p:'',f:'This feast honors the Carmelite tradition and the Brown Scapular. The Blessed Mother reportedly appeared to St. Simon Stock in 1251 and promised that whoever dies wearing the scapular would be saved.'},
+      '7-22': {n:'St. Mary Magdalene',p:'Patron saint of penitents and contemplatives',f:'She was the first person to see the risen Christ, earning her the title "Apostle to the Apostles." Pope Francis elevated her memorial to a feast day in 2016 to emphasize her importance.'},
+      '7-23': {n:'St. Bridget of Sweden',p:'Patron saint of Europe and widows',f:'After her husband\'s death, she founded the Brigittine order and experienced vivid revelations about Christ\'s Passion that influenced Christian art for centuries.'},
+      '7-25': {n:'St. James the Apostle',p:'Patron saint of Spain and pilgrims',f:'His shrine at Santiago de Compostela in Spain has been one of the most popular pilgrimage destinations for over a thousand years. The Camino de Santiago attracts hundreds of thousands of pilgrims annually.'},
+      '7-26': {n:'Sts. Joachim and Anne',p:'Patron saints of grandparents',f:'Though not mentioned in Scripture, tradition holds them as the parents of the Blessed Virgin Mary. St. Anne is one of the most widely venerated saints in the world.'},
+      '7-29': {n:'St. Martha',p:'Patron saint of cooks and homemakers',f:'She famously complained to Jesus that her sister Mary wasn\'t helping with the housework. Jesus gently told her that Mary had "chosen the better part," a teaching on contemplation and action.'},
+      '7-31': {n:'St. Ignatius of Loyola',p:'Patron saint of soldiers and retreats',f:'A cannonball that shattered his leg ended his military career and began his spiritual one. While recovering, he read about saints and was so inspired he founded the Jesuits, now the largest religious order.'},
+      // August
+      '8-1': {n:'St. Alphonsus Liguori',p:'Patron saint of moral theologians and arthritis sufferers',f:'He founded the Redemptorists at age 36 and wrote over 100 books. Severe arthritis bent his head so far forward that it pressed against his chest in his later years.'},
+      '8-4': {n:'St. John Vianney',p:'Patron saint of parish priests',f:'He spent 16 to 18 hours a day hearing confessions, with people traveling from across France to see him. He survived multiple attempts by the devil to disturb his sleep with loud noises.'},
+      '8-8': {n:'St. Dominic',p:'Patron saint of astronomers and the Dominican Republic',f:'He founded the Order of Preachers (Dominicans) to combat heresy through education. Tradition credits him with promoting the Rosary after the Blessed Mother appeared to him.'},
+      '8-10': {n:'St. Lawrence',p:'Patron saint of cooks and comedians',f:'When ordered to hand over the Church\'s treasures, he presented the poor and sick saying "These are the treasures of the Church." While being roasted alive on a gridiron, he reportedly said: "Turn me over, I\'m done on this side."'},
+      '8-11': {n:'St. Clare of Assisi',p:'Patron saint of television and eye disease',f:'She became patron of television because when she was too ill to attend Mass, an image of the service appeared on her cell wall. She founded the Poor Clares and convinced a Saracen army to retreat by holding up the Eucharist.'},
+      '8-14': {n:'St. Maximilian Kolbe',p:'Patron saint of drug addicts and political prisoners',f:'In Auschwitz, he volunteered to die in place of a stranger who cried out for his wife and children. He was the last of ten men to die in the starvation bunker, killed by lethal injection.'},
+      '8-15': {n:'The Assumption of the Blessed Virgin Mary',p:'',f:'This solemnity celebrates Mary being taken body and soul into heaven. It is one of the oldest Marian feast days, celebrated since at least the 5th century, and was dogmatically defined in 1950.'},
+      '8-20': {n:'St. Bernard of Clairvaux',p:'Patron saint of beekeepers and candlemakers',f:'Called the "Honey-Tongued Doctor" for his eloquent preaching, he entered the monastery with 30 of his relatives and friends. He founded 163 monasteries across Europe.'},
+      '8-21': {n:'St. Pius X',p:'Patron saint of first communicants and pilgrims',f:'He lowered the age for First Communion from 12 to about 7, saying children should receive Jesus as soon as they could distinguish the Eucharist from ordinary bread.'},
+      '8-23': {n:'St. Rose of Lima',p:'Patron saint of Latin America and the Philippines',f:'The first saint of the Americas, she was so beautiful her parents wanted her to marry, but she rubbed pepper on her face to disfigure herself. She lived as a hermit in a shed in her family\'s garden.'},
+      '8-27': {n:'St. Monica',p:'Patron saint of mothers and married women',f:'She prayed for her son Augustine\'s conversion for 17 years. A bishop reassured her: "It is impossible that the son of so many tears should perish." Augustine became one of the greatest saints.'},
+      '8-28': {n:'St. Augustine of Hippo',p:'Patron saint of brewers and theologians',f:'Before his conversion he famously prayed: "Lord, make me chaste — but not yet." His Confessions is considered the first Western autobiography and is still widely read after 1,600 years.'},
+      '8-29': {n:'The Passion of St. John the Baptist',p:'',f:'This feast commemorates John\'s beheading at the order of Herod, who was manipulated by Salome\'s dance. John had fearlessly denounced Herod\'s unlawful marriage.'},
+      // September
+      '9-3': {n:'St. Gregory the Great',p:'Patron saint of musicians, singers, and teachers',f:'He reformed the liturgy and promoted what became known as Gregorian chant. Before becoming pope, he sold all his possessions and turned his family estate into a monastery.'},
+      '9-5': {n:'St. Teresa of Calcutta',p:'Patron saint of World Youth Day',f:'She won the Nobel Peace Prize in 1979. Her private letters, published after her death, revealed she experienced decades of spiritual darkness — yet continued her work with unwavering dedication.'},
+      '9-9': {n:'St. Peter Claver',p:'Patron saint of slaves, race relations, and Colombia',f:'He met every slave ship that arrived in Cartagena, Colombia, climbing into the dark holds with food and medicine. He personally ministered to over 300,000 enslaved people.'},
+      '9-13': {n:'St. John Chrysostom',p:'Patron saint of orators and preachers',f:'His name means "Golden Mouth" for his extraordinary preaching. He was so popular in Constantinople that he was exiled twice for criticizing the empress\'s vanity and the clergy\'s wealth.'},
+      '9-16': {n:'Sts. Cornelius and Cyprian',p:'',f:'Pope Cornelius and Bishop Cyprian, though they disagreed about how to treat Christians who lapsed under persecution, were both martyred and are celebrated together as witnesses to unity.'},
+      '9-17': {n:'St. Robert Bellarmine',p:'Patron saint of catechists',f:'This Jesuit cardinal was one of the most important figures of the Counter-Reformation. He was so short that he needed a special platform to be seen at the pulpit.'},
+      '9-20': {n:'Sts. Andrew Kim Tae-gŏn & Paul Chŏng Ha-sang',p:'Patron saints of Korea',f:'Andrew Kim was the first Korean-born Catholic priest. He was beheaded at age 25. Over 10,000 Korean Catholics were martyred between 1839 and 1867.'},
+      '9-21': {n:'St. Matthew',p:'Patron saint of accountants and tax collectors',f:'He went from being a despised tax collector to writing the first Gospel. When Jesus called him, Matthew left his tax booth immediately — abandoning what was likely a lucrative career.'},
+      '9-23': {n:'St. Padre Pio',p:'Patron saint of stress relief and civil defense volunteers',f:'He bore the stigmata for 50 years and reportedly could bilocate, read souls in confession, and emit the fragrance of flowers. Over 5,000 prayer groups worldwide bear his name.'},
+      '9-27': {n:'St. Vincent de Paul',p:'Patron saint of charitable organizations',f:'Once captured by pirates and sold into slavery in Tunisia, he eventually escaped and devoted his life to serving the poor. He founded both the Vincentians and, with St. Louise de Marillac, the Daughters of Charity.'},
+      '9-29': {n:'Sts. Michael, Gabriel, and Raphael',p:'Patron saints (Michael: soldiers and police; Gabriel: communications; Raphael: travelers and the blind)',f:'These are the only three angels named in Scripture. Michael defeated Satan, Gabriel announced the Incarnation, and Raphael healed Tobit\'s blindness and guided his son Tobias.'},
+      '9-30': {n:'St. Jerome',p:'Patron saint of librarians and translators',f:'He translated the entire Bible into Latin (the Vulgate), which remained the standard text for over a thousand years. He was famously bad-tempered and once wrote: "I am not a saint."'},
+      // October
+      '10-1': {n:'St. Thérèse of Lisieux',p:'Patron saint of missionaries, florists, and pilots',f:'She entered the Carmelite convent at just 15, needing special permission from the pope. Her autobiography, written under obedience, became one of the most popular spiritual books ever. She called her spirituality the "Little Way."'},
+      '10-2': {n:'The Holy Guardian Angels',p:'',f:'This feast honors the angels God assigns to protect each person. Jesus referenced guardian angels when He said of children: "Their angels in heaven always see the face of my Father" (Mt 18:10).'},
+      '10-4': {n:'St. Francis of Assisi',p:'Patron saint of animals, ecology, and Italy',f:'The son of a wealthy cloth merchant, he stripped off his fine clothes in the public square and renounced his inheritance. He received the stigmata two years before his death and composed the "Canticle of the Sun."'},
+      '10-5': {n:'St. Faustina Kowalska',p:'Patron saint of mercy',f:'A young Polish nun with only three years of education, she recorded Jesus\'s messages about Divine Mercy in her diary. The Divine Mercy devotion she promoted is now practiced worldwide.'},
+      '10-7': {n:'Our Lady of the Rosary',p:'',f:'This feast was established by Pope Pius V to commemorate the Christian victory at the Battle of Lepanto in 1571, which he attributed to the power of the Rosary prayed across Europe.'},
+      '10-15': {n:'St. Teresa of Ávila',p:'Patron saint of headache sufferers and chess players',f:'She reformed the Carmelite order despite fierce opposition and was the first woman named a Doctor of the Church. She was known for her wit; she once told God: "If this is how You treat Your friends, no wonder You have so few."'},
+      '10-16': {n:'St. Margaret Mary Alacoque',p:'Patron saint of devotees of the Sacred Heart',f:'Jesus appeared to her and revealed His Sacred Heart, asking for a feast day of reparation. The devotion she promoted — including First Friday Communion and the Holy Hour — spread throughout the entire Church.'},
+      '10-17': {n:'St. Ignatius of Antioch',p:'Patron saint of the Church in the Eastern Mediterranean',f:'On his way to martyrdom in Rome, he wrote seven letters that are among the earliest Christian documents outside the New Testament. He coined the term "Catholic Church" in writing.'},
+      '10-18': {n:'St. Luke the Evangelist',p:'Patron saint of artists, physicians, and surgeons',f:'He was a physician and the only Gentile author of the New Testament. He wrote both the Gospel of Luke and the Acts of the Apostles — together comprising over a quarter of the New Testament.'},
+      '10-22': {n:'St. John Paul II',p:'Patron saint of families and World Youth Day',f:'He survived an assassination attempt in 1981 and later visited his would-be assassin in prison to forgive him. He traveled more than any other pope in history, visiting 129 countries.'},
+      // November
+      '11-1': {n:'All Saints',p:'',f:'This solemnity honors all saints, known and unknown. It originated in the 4th century when churches began dedicating days to martyrs. Pope Gregory III fixed it on November 1 in the 8th century.'},
+      '11-2': {n:'All Souls\' Day',p:'',f:'The Church prays for all the faithful departed, especially those in purgatory. The tradition of visiting cemeteries and offering Masses for the dead on this day goes back centuries.'},
+      '11-3': {n:'St. Martin de Porres',p:'Patron saint of mixed-race people, barbers, and public health workers',f:'Born in Lima to a Spanish nobleman and a freed slave, he was known for miraculous healings and for caring for animals. He reportedly could bilocate and was seen in distant countries while never leaving his monastery.'},
+      '11-4': {n:'St. Charles Borromeo',p:'Patron saint of catechists and seminarians',f:'As Archbishop of Milan, he personally ministered to plague victims when others fled. He established the first seminaries as we know them and implemented many reforms of the Council of Trent.'},
+      '11-10': {n:'St. Leo the Great',p:'Patron saint of popes',f:'He personally met Attila the Hun outside Rome in 452 and persuaded him to turn back, saving the city. He was one of only two popes called "the Great" before John Paul II.'},
+      '11-11': {n:'St. Martin of Tours',p:'Patron saint of soldiers, beggars, and winemakers',f:'As a Roman soldier, he cut his cloak in half to share with a freezing beggar. That night, Christ appeared wearing the half-cloak. He left the army saying: "I am a soldier of Christ; I cannot fight."'},
+      '11-13': {n:'St. Frances Xavier Cabrini',p:'Patron saint of immigrants',f:'She was the first U.S. citizen to be canonized. Despite a lifelong fear of water, she crossed the Atlantic over 30 times and founded 67 institutions across the Americas, Europe, and beyond.'},
+      '11-15': {n:'St. Albert the Great',p:'Patron saint of scientists and natural philosophers',f:'Teacher of St. Thomas Aquinas, he was perhaps the most learned man of his age. He wrote extensively on biology, chemistry, physics, astronomy, and geography alongside his theological works.'},
+      '11-17': {n:'St. Elizabeth of Hungary',p:'Patron saint of bakers and the homeless',f:'A princess who married at 14, she was widowed at 20 and used her dowry to build a hospital. Legend says that when her husband caught her sneaking bread to the poor, the loaves turned into roses.'},
+      '11-22': {n:'St. Cecilia',p:'Patron saint of musicians and singers',f:'According to tradition, she sang to God in her heart during her forced wedding. When martyred, the executioner struck three times but could not sever her head; she lived three more days, converting hundreds.'},
+      '11-30': {n:'St. Andrew the Apostle',p:'Patron saint of Scotland, fishermen, and Russia',f:'Peter\'s brother and the first apostle called by Jesus. He was crucified on an X-shaped cross because he felt unworthy to die on the same type of cross as Christ. This became the St. Andrew\'s Cross on Scotland\'s flag.'},
+      // December
+      '12-3': {n:'St. Francis Xavier',p:'Patron saint of missionaries and foreign missions',f:'He baptized an estimated 30,000 people across India, Southeast Asia, and Japan in just 10 years. He died on an island off the coast of China, still hoping to enter the mainland.'},
+      '12-6': {n:'St. Nicholas',p:'Patron saint of children, sailors, and gift-givers',f:'The real Santa Claus was a 4th-century bishop in modern-day Turkey. He was known for secret gift-giving — he reportedly threw bags of gold through a window to save three sisters from being sold.'},
+      '12-7': {n:'St. Ambrose',p:'Patron saint of beekeepers and learning',f:'He was elected Bishop of Milan by popular demand before he was even baptized. He had such a profound influence on St. Augustine\'s conversion that Augustine later called Ambrose his spiritual father.'},
+      '12-8': {n:'The Immaculate Conception',p:'',f:'This solemnity celebrates Mary being conceived without original sin. It is the patronal feast of the United States. The doctrine was dogmatically defined by Pope Pius IX in 1854.'},
+      '12-12': {n:'Our Lady of Guadalupe',p:'Patron saint of the Americas and the unborn',f:'In 1531, the Blessed Mother appeared to St. Juan Diego in Mexico, leaving her image on his tilma. The image, which has survived for nearly 500 years, contains details that science still cannot explain.'},
+      '12-13': {n:'St. Lucy',p:'Patron saint of the blind and eye disorders',f:'Her name means "light." According to tradition, she tore out her own eyes rather than deny her faith, and God restored them even more beautiful. Her feast falls near the winter solstice, celebrating light in darkness.'},
+      '12-14': {n:'St. John of the Cross',p:'Patron saint of mystics and contemplatives',f:'He was imprisoned for nine months by his own Carmelite brothers for supporting St. Teresa of Ávila\'s reforms. In that dark cell, he composed some of the greatest mystical poetry ever written.'},
+      '12-26': {n:'St. Stephen',p:'Patron saint of deacons and stonemasons',f:'He was the first Christian martyr, stoned to death while praying for his executioners. A young Saul — later St. Paul — watched approvingly, holding the coats of those who stoned him.'},
+      '12-27': {n:'St. John the Evangelist',p:'Patron saint of authors, editors, and friendships',f:'The "beloved disciple" was the only apostle who did not abandon Jesus at the Cross. He is traditionally credited with writing the Gospel of John, three epistles, and the Book of Revelation.'},
+      '12-28': {n:'The Holy Innocents',p:'Patron saints of babies and foundlings',f:'These were the infant boys of Bethlehem killed by King Herod in his attempt to destroy the newborn Jesus. They are venerated as the first martyrs for Christ, though they could not speak for themselves.'},
+      '12-29': {n:'St. Thomas Becket',p:'Patron saint of clergy and secular clergy',f:'Once King Henry II\'s closest friend and chancellor, he refused to let the crown control the Church after becoming Archbishop of Canterbury. Four knights murdered him in his own cathedral.'}
+    };
+
+    var now = new Date();
+    var key = (now.getMonth() + 1) + '-' + now.getDate();
+    var saint = saints[key];
+    if (saint) {
+      document.getElementById('saint-card').style.display = 'block';
+      document.getElementById('saint-name').textContent = saint.n;
+      document.getElementById('saint-patron').textContent = saint.p || '';
+      document.getElementById('saint-fact').textContent = saint.f;
+      if (!saint.p) {
+        document.getElementById('saint-patron').style.display = 'none';
+      }
+    }
+  })();
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        // If it's a prayer card, open it first
+        if (target.classList.contains('prayer-card') && !target.classList.contains('open')) {
+          target.classList.add('open');
+          updateToggleButton();
+        }
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
