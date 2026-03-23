@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ground Uncharted — AI, Economics, Work & The Future</title>
+<meta name="description" content="Making sense of what's coming — AI, economics, work, and life in a world that's changing fast.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #3B3B3A;
+    --card: #4A4A48;
+    --border: #555553;
+    --cream: #F5F1EB;
+    --muted: #A8A39E;
+    --dim: #6B6560;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .compass {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.2s forwards;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.4s forwards;
+  }
+
+  .tagline {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.6s forwards;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.8s forwards;
+  }
+
+  .description {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1s forwards;
+  }
+
+  .pillars {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.2s forwards;
+  }
+
+  .pill {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: all 0.3s;
+  }
+
+  .pill:hover {
+    color: var(--cream);
+    border-color: var(--cream);
+  }
+
+  .cta-section {
+    opacity: 0;
+    animation: fadeIn 1s ease 1.4s forwards;
+  }
+
+  .cta-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cream);
+    color: var(--bg);
+    padding: 14px 32px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .cta-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  footer {
+    margin-top: 64px;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.6s forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 28px; letter-spacing: 2px; }
+    .tagline { font-size: 11px; letter-spacing: 4px; }
+    .description { font-size: 14px; }
+    .pillars { gap: 12px; }
+    .pill { font-size: 10px; padding: 8px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="compass" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#F5F1EB" stroke-width="3" stroke-dasharray="18 10"/>
+  <polygon points="100,40 108,85 100,75 92,85" fill="#F5F1EB"/>
+  <circle cx="100" cy="100" r="4" fill="#F5F1EB"/>
+  <line x1="100" y1="100" x2="125" y2="75" stroke="#F5F1EB" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+
+<h1>GROUND UNCHARTED</h1>
+
+<div class="tagline">AI · Economics · Work · The Future</div>
+
+<div class="divider"></div>
+
+<p class="description">Making sense of what's coming — AI, economics, work, and life in a world that's changing fast. No hype. No fear. Just honest conversation.</p>
+
+<div class="pillars">
+  <span class="pill">Future of Work</span>
+  <span class="pill">Personal Finance</span>
+  <span class="pill">Deep Conversations</span>
+  <span class="pill">The Journey</span>
+</div>
+
+<div class="cta-section">
+  <div class="cta-label">Watch on YouTube</div>
+  <a href="https://www.youtube.com/@GroundUncharted" class="cta-btn" target="_blank">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    Subscribe
+  </a>
+</div>
+
+<footer>© 2026 GROUND UNCHARTED</footer>
+
+</body>
+</html>
